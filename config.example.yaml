@@ -1,0 +1,104 @@
+# =============================================================================
+#  Config for build_steering_webpage.py
+#  Drives every piece of text and every file lookup on the page.
+# =============================================================================
+
+# ---- Page header ----
+title: "Discovering Sound-Source Concepts in Text-to-Audio Diffusion Models Using Sparse Autoencoders"
+subtitle: "Supplementary audio examples — single-concept steering"
+description: |
+  We steer individual, interpretable SAE features in the residual stream of
+  Stable Audio Open. For each prompt we sweep the steering strength alpha
+  (columns) across three DiT layers (rows), at a single fixed denoising
+  timestep t (shown beside the prompt). alpha = 0 is the unsteered generation.
+
+  Best viewed on Chrome or Firefox.
+footer: "Music and Audio Research Lab, NYU · 2026"
+
+# ---- Grid axes ----
+alphas: [0, 10, 20]        # columns within each layer row
+unsteered_alpha: 0         # this column is marked as the reference
+layers: [8, 12, 16]        # one row per layer id (per-prompt override allowed)
+timestep: 0.5              # fixed denoising timestep for the run; shown beside each prompt
+# Optional header overrides:
+# alpha_labels: {0: "α = 0 (unsteered)", 10: "α = 10", 20: "α = 20"}
+# layer_labels: {8: "Layer 8 (early)", 12: "Layer 12 (mid)", 16: "Layer 16 (late)"}
+
+# ---- File resolution ----
+audio_ext: ".wav"
+# Placeholders: {sound} {layer} {alpha} {timestep} {ext}  (unused ones are ignored)
+#   sound "birds", layer 12, alpha 10  ->  birds_layer12_alpha10.wav
+filename_template: "{sound}_layer{layer}_alpha{alpha}{ext}"
+# alpha=0 is layer-independent: one unsteered file per concept, reused across layer rows.
+# Set false if your pipeline writes a separate unsteered file per layer.
+unsteered_layer_independent: true
+unsteered_filename_template: "{sound}_alpha{alpha}{ext}"   # e.g. birds_alpha0.wav
+copy_audio: true
+
+# ---- Spectrograms ----
+spectrograms:
+  generate: true           # false -> reuse a PNG next to each wav (same stem)
+  sr: null                 # null = native sample rate
+  n_fft: 2048
+  hop_length: 512
+  n_mels: 128
+  fmax: 16000
+  cmap: "magma"
+  width_px: 480
+  height_px: 200
+  top_db: 80
+
+# ---- Prompts (sections) ----
+# Each key must match a subfolder name under --audio-dir.
+prompts:
+
+  prompt_1:
+    prompt: "frog croaking by a stream in the woods."
+    # timestep: 0.4          # optional per-prompt override of the global timestep
+    context: >
+      Steering the "frog croaking" feature across layers 8/12/16. 
+    sounds:
+      - id: "frogs"
+        label: "steer to: Police Car (Siren)"
+        note: "Notice how the sound at alpha=0 changes for different layers, as alpha increases."
+        # Optional explicit filenames (override the template):
+        # files:
+        #   unsteered: "dog_only.wav"        # layer-independent alpha=0
+        #   12: {10: "dog_birds_L12_a10.wav", 20: "dog_birds_L12_a20.wav"}
+
+  prompt_2:
+    prompt: "Trumpet plays a slow, lyrical melodic line."
+    context: >
+      Steering the "Trumpet" feature across layers 8/12/16. 
+    sounds:
+      - id: "trumpet"
+        label: "steer to: Thudding"
+        note: "Notice how the sound at alpha=0 changes for different layers, as alpha increases."
+
+  prompt_3_1:
+    prompt: "Water dripping."
+    context: >
+      Steering the "Water dripping" feature across layers 8/12/16. 
+    sounds:
+      - id: "water"
+        label: "steer to: Pouring"
+        note: "Notice how the rate of dripping changes as alpha increases."
+
+
+  prompt_4:
+    prompt: "Sound of muted footsteps."
+    context: >
+      Steering the "Sound of muted footsteps" feature across layers 8/12/16. 
+    sounds:
+      - id: "footsteps"
+        label: "steer to: Church Bell"
+        note: "Notice how the the steering adds ringing to the sound."
+
+  prompt_5:
+    prompt: "Stuttering chirps of a sparrow, quick and repetitive."
+    context: >
+      Steering the "Chirps" feature across layers 8/12/16. 
+    sounds:
+      - id: "bird"
+        label: "steer to: 'Bee, Wasp, Etc.'"
+        note: "Notice how the the steering changes chirping to buzzing. Especially Layer 16."
