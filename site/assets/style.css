@@ -95,7 +95,7 @@ body {
   padding: .2rem .6rem; border-radius: 5px;
   margin-bottom: .6rem;
 }
-.sound-note { color: var(--muted); max-width: 70ch; margin: 0 0 .8rem; font-size: .95rem; }
+.sound-note { color: var(--muted); max-width: 70ch; margin: 0 0 .8rem; font-size: 1.2rem; }
 
 /* ---- cell (one alpha column) ---- */
 .cell {
