@@ -28,7 +28,7 @@ body {
   margin: 0 0 .5rem;
 }
 .page-subtitle { color: var(--muted); font-size: 1.05rem; margin: 0 0 1rem; }
-.page-desc { max-width: 62ch; color: #333; }
+.page-desc { max-width: 100%; color: #333; }
 .page-desc p { margin-bottom: .6rem; }
 
 /* ---- table of contents ---- */
