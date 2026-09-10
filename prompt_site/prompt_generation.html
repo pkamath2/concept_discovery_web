@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prompt generation &mdash; single-source dataset</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:#fbfbf8; --ink:#1b1b1a; --muted:#6a6a63; --line:#e4e2da;
+    --accent:#3a4a6b; --card:#fff; --code-bg:#f4f3ee;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:820px; margin:0 auto; padding:2.5rem 1.25rem 5rem; }
+  .home { font-family:"IBM Plex Mono",monospace; font-size:.8rem; color:var(--accent);
+    text-decoration:none; }
+  .home:hover { text-decoration:underline; }
+  h1 { font-family:"Spectral",Georgia,serif; font-weight:600;
+    font-size:clamp(1.7rem,3.4vw,2.4rem); letter-spacing:-.01em; margin:1rem 0 .5rem; }
+  .lede { color:#333; max-width:66ch; margin:0 0 1.5rem; }
+  h2 { font-family:"Spectral",Georgia,serif; font-weight:600; font-size:1.3rem;
+    margin:2.4rem 0 .2rem; }
+  .eyebrow { font-family:"IBM Plex Mono",monospace; font-size:.7rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--accent); }
+  p { max-width:66ch; }
+  hr { border:0; border-top:1px solid var(--line); margin:1.5rem 0; }
+  ul { max-width:66ch; }
+  li { margin:.25rem 0; }
+  code { font-family:"IBM Plex Mono",monospace; font-size:.88em;
+    background:var(--code-bg); padding:.08em .35em; border-radius:4px; }
+  table { border-collapse:collapse; width:100%; margin:.6rem 0 0; }
+  th, td { text-align:left; vertical-align:top; padding:.5rem .6rem; border-bottom:1px solid var(--line);
+    font-size:.94rem; }
+  th[scope=row] { width:34%; font-weight:600; color:#333; }
+  td code { font-size:.85em; }
+  .env-list { columns:2; column-gap:2rem; }
+  @media (max-width:560px) { .env-list { columns:1; } }
+  .codeblock { position:relative; }
+  pre { background:var(--code-bg); border:1px solid var(--line); border-radius:8px;
+    padding:1rem 1.05rem; overflow:auto; margin:.5rem 0 0; }
+  pre code { background:none; padding:0; font-size:.84rem; line-height:1.55; white-space:pre-wrap; word-wrap:break-word; }
+  .copy { position:absolute; top:.55rem; right:.55rem;
+    font-family:"IBM Plex Mono",monospace; font-size:.72rem; color:var(--accent);
+    background:#fff; border:1px solid var(--line); border-radius:6px; padding:.2rem .5rem; cursor:pointer; }
+  .copy:hover { border-color:var(--accent); }
+  .note { font-size:.9rem; color:var(--muted); }
+  .foot { margin-top:3rem; padding-top:1.4rem; border-top:1px solid var(--line);
+    color:var(--muted); font-size:.9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- EDIT: point back to your landing page, or delete this link -->
+  <a class="home" href="../index.html">&larr; Project home</a>
+
+  <div class="eyebrow" style="margin-top:1.2rem;">Dataset construction</div>
+  <h1>Generating the single-source prompt dataset</h1>
+  <p class="lede">
+    We used Claude Haiku 4.5 (<code>claude-haiku-4-5-20251001</code>) to write 150,000
+    natural-language prompts for a text-to-audio model (Stable Audio Open). Every prompt
+    describes a single sounding source performing one physically plausible action, placed in
+    one of sixteen acoustic environments. This page documents the exact system prompt, the
+    user-message template, and the generation settings for reproducibility.
+  </p>
+
+  <h2>Generation configuration</h2>
+  <table>
+    <tbody>
+        <tr><th scope='row'>Model</th><td><code>claude-haiku-4-5-20251001</code> (Claude Haiku 4.5)</td></tr>
+        <tr><th scope='row'>Final dataset</th><td>150,000 prompts &mdash; train 120,000 / val 15,000 / test 15,000</td></tr>
+    </tbody>
+  </table>
+
+  
+
+  <h2>System prompt</h2>
+  <p>Identical for every request (and cached across the batch).</p>
+  <div class="codeblock">
+    <button class="copy" data-copy="#sys">copy</button>
+    <pre><code id="sys">You write short natural-language prompts for a text-to-audio model (Stable Audio Open).
+
+You are given ONE sound source (a label) and ONE acoustic environment. Produce a set of distinct prompts, each describing that ONE source making a sound.
+
+Hard rules:
+- EXACTLY ONE sounding source per prompt. Never introduce a second source, a background sound, or an unrelated object. The source is only the given label.
+- Choose an action, manner, or process that is PHYSICALLY PLAUSIBLE for that source. If the label already names an action (e.g. &quot;Bark&quot;, &quot;Air Brake&quot;, &quot;Zipper&quot;), realize that action directly; you may vary its manner (a single bark vs. rapid barking; a short zip vs. a slow drawn-out zip) but never change what the source is.
+- If the label is a broad source (e.g. &quot;Dog&quot;, &quot;Bird&quot;, &quot;Car&quot;), pick a sound it naturally makes (dog -&gt; barking, howling, growling, whimpering; car -&gt; engine idling, door slamming, tires on gravel). Do NOT attach an action that the source cannot produce.
+- Place the sound in the given environment ONLY when that is plausible for the source. If the environment makes no physical sense for this source (e.g. ocean surf in a tiled bathroom), ignore it and use a neutral space or none. Never force an implausible room.
+- Describe the SOUND, not a visual scene or a story. Present tense. No brand names. Do not start with &quot;a sound of&quot; or &quot;the sound of&quot;. Vary sentence structure across the prompts.
+- Each prompt is 5 to 15 words, and MOST should be 5 to 10 words. Keep them short and concrete, the way a Stable Audio Open prompt reads. Each ends with a period.
+
+Motion (use for SOME prompts, only when plausible):
+- Give SOME prompts a sense of MOTION of the single source: moving left to right or right to left across the stereo field, approaching or receding, passing by, or moving at different speeds (slow, fast). This still describes ONE source moving — it is NOT a second source. A dog running from left to right while barking is one source; a car driving past is one source.
+- Apply motion ONLY when it is physically plausible for this source. Sources that do not travel — stationary appliances, fixed objects, ambient textures (e.g. an air conditioner, a zipper, rain) — must stay still. For those, keep every prompt stationary and never invent movement.
+- A stationary environment (e.g. a small padded booth, a tiled bathroom) is not a good fit for motion; prefer motion in open or passing spaces.
+
+Across this set, vary the action, intensity, tempo, perspective (near/far), and motion so the prompts are clearly distinct from one another.
+
+Output ONLY a JSON array of objects, nothing else. Each object is {&quot;prompt&quot;: &quot;&lt;the prompt&gt;&quot;, &quot;motion&quot;: true|false}, where &quot;motion&quot; is true ONLY if that prompt describes the source moving. Example:
+[{&quot;prompt&quot;: &quot;A dog barks sharply in an open yard.&quot;, &quot;motion&quot;: false}, {&quot;prompt&quot;: &quot;A barking dog runs from left to right across the field.&quot;, &quot;motion&quot;: true}]</code></pre>
+  </div>
+
+  <h2>Acoustic environments</h2>
+  <p>Sixteen environments, applied one per request so each label is spread evenly across all spaces.
+     The model is instructed to ignore an environment that is implausible for a given source.</p>
+  <ul class="env-list">
+      <li>close-miked and dry, with no room reverb</li>
+      <li>in a small carpeted room</li>
+      <li>in a small tiled bathroom</li>
+      <li>in an average living room</li>
+      <li>in a large empty hall with long reverb</li>
+      <li>in a large warehouse</li>
+      <li>in a concrete stairwell</li>
+      <li>in a wooden-floored studio</li>
+      <li>outdoors in an open field</li>
+      <li>outdoors in a dense forest</li>
+      <li>outdoors on a quiet street</li>
+      <li>in a narrow corridor</li>
+      <li>in a cavernous underground space</li>
+      <li>in a small padded recording booth</li>
+      <li>heard from a distance across an open space</li>
+      <li>up close in a quiet room</li>
+  </ul>
+
+  <h2>User message</h2>
+  <p>One message per request, filled from the label, environment, and a per-request diversity seed:</p>
+  <div class="codeblock">
+    <button class="copy" data-copy="#usr">copy</button>
+    <pre><code id="usr">Sound source: {label}
+Acoustic environment: {environment}
+Write {n} distinct prompts, each 5-15 words (ideally 5-10). Aim for about {motion_target} of them to convey plausible motion of the source; keep the rest stationary. If this source cannot move, keep all stationary. Diversity seed: {seed} (use it to make this set different from other sets for the same source).</code></pre>
+  </div>
+  <p style="margin-top:1rem;">A concrete example (label <code>Dog Barking</code>, first environment,
+     25 prompts, seed&nbsp;0):</p>
+  <pre><code>Sound source: Dog Barking
+Acoustic environment: outdoors in an open field
+Write 25 distinct prompts, each 5-15 words (ideally 5-10). Aim for about 8 of them to convey plausible motion of the source; keep the rest stationary. If this source cannot move, keep all stationary. Diversity seed: 0 (use it to make this set different from other sets for the same source).</code></pre>
+
+  <h2>Model output &amp; post-processing</h2>
+  <p>The model returns a strict JSON array, one object per prompt:
+     <code>{"prompt": "&hellip;", "motion": true|false}</code>, where <code>motion</code> is true only
+     when that prompt describes the single source moving. Responses are parsed, each prompt is
+     validated (5&ndash;15 words) and de-duplicated, then the pool is shuffled (seed&nbsp;42) and split
+     80/10/10, trimmed to 120,000 / 15,000 / 15,000. Each finalized record:</p>
+  <pre><code>{
+  &quot;id&quot;:              &quot;p_0000001&quot;,
+  &quot;prompt&quot;:          &quot;A barking dog runs from left to right across the field.&quot;,
+  &quot;sounding_object&quot;: &quot;Dog&quot;,
+  &quot;environment&quot;:     &quot;outdoors in an open field&quot;,
+  &quot;motion&quot;:          true,
+  &quot;split&quot;:           &quot;train&quot;
+}</code></pre>
+
+  <h2>Design constraints</h2>
+  <ul>
+    <li><strong>Exactly one sounding source per prompt</strong> &mdash; no second source, background, or unrelated object.</li>
+    <li><strong>Physically plausible action</strong> &mdash; if the label names an action it is realized directly (its manner may vary); a broad label uses a sound the source naturally makes.</li>
+    <li><strong>Environment as the only extra axis</strong> &mdash; the source is placed in the given space only when plausible, otherwise a neutral space is used.</li>
+    <li><strong>Motion of the single source</strong> &mdash; about 30% of prompts convey the one source moving (left&ndash;right, approaching, receding, passing), applied only to sources that can travel; stationary sources stay still.</li>
+    <li><strong>Prompt style</strong> &mdash; present tense, describe the sound not a visual scene, no brand names, no &ldquo;sound of&rdquo; opener, 5&ndash;15 words ending with a period.</li>
+  </ul>
+
+  <footer class="foot">Music and Audio Research Lab, NYU &middot; 2026</footer>
+</div>
+
+<script>
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var el = document.querySelector(btn.getAttribute('data-copy'));
+      navigator.clipboard.writeText(el.textContent).then(function(){
+        var t = btn.textContent; btn.textContent = 'copied'; setTimeout(function(){ btn.textContent = t; }, 1200);
+      });
+    });
+  });
+</script>
+</body>
+</html>
