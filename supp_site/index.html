@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supplementary Material</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="assets/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container page">
+  <header class="page-head" id="top">
+    <h1 class="page-title">Supplementary Material</h1>
+    <p class='page-subtitle'>Interpretable, steerable sound-source concepts in Stable Audio Open</p>
+    <div class='page-desc'><p>This page collects supplementary tables and figures referenced in the main
+paper. Click any image to enlarge.</p></div>
+  </header>
+  <nav class='toc'><div class='toc-title'>Contents</div><ol><li><a href='#ev-heatmap'>SAE explained-variance heatmap</a></li><li><a href='#topk-ablation'>TopK sparsity ablation (k = 32 vs k = 64), mid-network layers</a></li></ol></nav>
+  <main>
+    <section class='supp-section' id='ev-heatmap'><div class='supp-eyebrow'>S1</div><h2 class='supp-title'>SAE explained-variance heatmap</h2><p class='supp-intro'>Validation explained variance (EV) of the TopK SAEs across the layer × timestep grid. Higher is better; mid-network cells reflect the high intrinsic dimensionality of the residual stream.
+</p><div class='row g-4 align-items-start'><div class='col-12 col-md-12'><figure class='fig'><a class='fig-link' href='assets/images/sae_ev_k_32.pdf' data-zoom='assets/images/sae_ev_k_32.pdf' target='_blank' rel='noopener'><img class='fig-img zoomable' src='assets/images/sae_ev_k_32.pdf' alt='EV heatmap across layers and timesteps' loading='lazy'></a><figcaption class='fig-cap'>Table S1. Validation EV per (layer, timestep) cell.</figcaption></figure></div></div></section>
+<section class='supp-section' id='topk-ablation'><div class='supp-eyebrow'>S2</div><h2 class='supp-title'>TopK sparsity ablation (k = 32 vs k = 64), mid-network layers</h2><p class='supp-intro'>Effect of the TopK sparsity level on SAE quality metrics for the mid-network layers. Left: k = 32. Right: k = 64.
+</p><div class='row g-4 align-items-start'><div class='col-12 col-md-6'><figure class='fig'><a class='fig-link' href='assets/images/ablation_k_32.png' data-zoom='assets/images/ablation_k_32.png' target='_blank' rel='noopener'><img class='fig-img zoomable' src='assets/images/ablation_k_32.png' alt='Ablation table for k=32' loading='lazy'></a><figcaption class='fig-cap'>Table S2a. k = 32.</figcaption></figure></div><div class='col-12 col-md-6'><figure class='fig'><a class='fig-link' href='assets/images/ablation_k_64.png' data-zoom='assets/images/ablation_k_64.png' target='_blank' rel='noopener'><img class='fig-img zoomable' src='assets/images/ablation_k_64.png' alt='Ablation table for k=64' loading='lazy'></a><figcaption class='fig-cap'>Table S2b. k = 64.</figcaption></figure></div></div></section>
+  </main>
+  <footer class="page-foot">Music and Audio Research Lab, NYU · 2026</footer>
+</div>
+<a href="#top" class="to-top" title="Back to top">&uarr;</a>
+
+<div class="lightbox" id="lightbox" hidden>
+  <img class="lightbox-img" id="lightbox-img" alt="enlarged figure">
+</div>
+<script>
+(function () {
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lightbox-img');
+  function open(src) { lbImg.src = src; lb.hidden = false; document.body.style.overflow = 'hidden'; }
+  function close() { lb.hidden = true; lbImg.src = ''; document.body.style.overflow = ''; }
+  document.querySelectorAll('.fig-link').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey) return; // let modified clicks open the file
+      e.preventDefault();
+      open(a.getAttribute('data-zoom'));
+    });
+  });
+  lb.addEventListener('click', close);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+</script>
+</body>
+</html>
