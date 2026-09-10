@@ -1,8 +1,144 @@
-<html>
-  <head>
-    <meta http-equiv="refresh" content="0; url=https://pkamath2.github.io/concept_discovery_web/site/" />    
-  </head>
-  <body>
-    
-  </body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- ============================================================= -->
+<!--  EDIT ME: page title (browser tab + heading below)            -->
+<!-- ============================================================= -->
+<title>Steering Stable Audio Open with Sparse Autoencoders</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --paper:#fbfbf8; --ink:#1b1b1a; --muted:#6a6a63; --line:#e4e2da;
+    --accent:#3a4a6b; --card:#ffffff;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:900px; margin:0 auto; padding:4rem 1.25rem 5rem; }
+
+  /* ---- header ---- */
+  .title {
+    font-family:"Spectral",Georgia,serif; font-weight:600;
+    font-size:clamp(1.9rem,4vw,2.8rem); letter-spacing:-0.01em; margin:0 0 .6rem;
+  }
+  .lede { color:#333; max-width:60ch; margin:0 0 1rem; font-size:1.05rem; }
+  /* Optional links row — fill in or delete. Delete the whole <nav> if unused. */
+  .links { display:flex; flex-wrap:wrap; gap:.5rem .9rem; margin:.2rem 0 0; padding:0; list-style:none; }
+  .links a {
+    font-family:"IBM Plex Mono",monospace; font-size:.82rem;
+    color:var(--accent); text-decoration:none;
+    border:1px solid var(--line); border-radius:6px; padding:.3rem .6rem; background:#fff;
+  }
+  .links a:hover { border-color:var(--accent); }
+
+  .divider { border:0; border-top:1px solid var(--line); margin:2.25rem 0; }
+
+  /* ---- cards ---- */
+  .grid { display:grid; grid-template-columns:1fr; gap:1rem; }
+  @media (min-width:640px){ .grid { grid-template-columns:1fr 1fr; } }
+
+  .card {
+    display:block; text-decoration:none; color:inherit;
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:1.25rem 1.3rem; transition:border-color .12s, transform .12s, box-shadow .12s;
+  }
+  .card:hover {
+    border-color:var(--accent); transform:translateY(-2px);
+    box-shadow:0 6px 20px rgba(26,26,24,.06);
+  }
+  .card .eyebrow {
+    font-family:"IBM Plex Mono",monospace; font-size:.7rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:.5rem;
+  }
+  .card h2 {
+    font-family:"Spectral",Georgia,serif; font-weight:500; font-size:1.3rem;
+    margin:0 0 .4rem; display:flex; align-items:center; gap:.4rem;
+  }
+  .card h2 .arrow { color:var(--muted); transition:transform .12s; }
+  .card:hover h2 .arrow { transform:translateX(3px); color:var(--accent); }
+  .card p { margin:0; color:var(--muted); font-size:.95rem; }
+
+  .foot { margin-top:3rem; color:var(--muted); font-size:.9rem; }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <header>
+    <!-- EDIT ME: heading + one-line description -->
+    <h1 class="title">Steering Stable Audio Open with Sparse Autoencoders</h1>
+    <p class="lede">
+      Project page and supplementary material for our work on interpretable,
+      steerable sound-source concepts in Stable Audio Open.
+    </p>
+
+    <!-- OPTIONAL: paper / code links. Fill the href="#" values, or delete this <nav>. -->
+    <nav>
+      <ul class="links">
+        <li><a href="#">Paper (PDF)</a></li>
+        <li><a href="#">arXiv</a></li>
+        <li><a href="#">Code</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <hr class="divider">
+
+  <!-- ============================================================= -->
+  <!--  THE PAGES.                                                    -->
+  <!--  To add a new page: copy one <a class="card"> ... </a> block   -->
+  <!--  and change the href, eyebrow, title, and description.         -->
+  <!--  href = path to that page's index.html (relative to this file).-->
+  <!-- ============================================================= -->
+  <div class="grid">
+
+    <!-- ---- CARD: Examples ---- -->
+    <a class="card" href="site/">
+      <div class="eyebrow">Audio</div>
+      <h2>Steering examples <span class="arrow">&rarr;</span></h2>
+      <p>Single-concept steering across layers and strengths — spectrograms and audio players.</p>
+    </a>
+
+    <!-- ---- CARD: Supplementary (EV) ---- -->
+    <a class="card" href="supp_site/">
+      <div class="eyebrow">Tables</div>
+      <h2>Supplementary <span class="arrow">&rarr;</span></h2>
+      <p>SAE explained-variance heatmap and the TopK (k=32 / k=64) ablations.</p>
+    </a>
+
+    <!-- ---- CARD: Feature dictionary ---- -->
+    <a class="card" href="feat_site/">
+      <div class="eyebrow">Browse</div>
+      <h2>Feature dictionary <span class="arrow">&rarr;</span></h2>
+      <p>Search the learned SAE features and their top concept associations.</p>
+    </a>
+
+    <!-- ---- ADD NEW CARDS ABOVE THIS LINE ----
+         Template to copy (remove the surrounding comment markers to use):
+
+    <a class="card" href="PATH/">
+      <div class="eyebrow">LABEL</div>
+      <h2>PAGE TITLE <span class="arrow">&rarr;</span></h2>
+      <p>One-line description.</p>
+    </a>
+
+    -->
+
+  </div>
+
+  <!-- EDIT ME (or delete): footer -->
+  <footer class="foot">Music and Audio Research Lab, NYU &middot; 2026</footer>
+
+</div>
+</body>
 </html>
